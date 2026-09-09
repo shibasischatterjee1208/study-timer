@@ -1,11 +1,44 @@
+.app.dark {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface-2: #334155;
+  --border: #475569;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #4ade80;
+}
+
+.app.light {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #e2e8f0;
+  --border: #cbd5e1;
+  --text: #1e293b;
+  --muted: #64748b;
+  --accent: #16a34a;
+}
+
 .app {
+  min-height: 100vh;
+  padding: 24px 16px;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.2s, color 0.2s;
+}
+
+.inner {
   max-width: 640px;
   margin: 0 auto;
 }
 
+.theme-row {
+  text-align: right;
+  margin-bottom: 16px;
+}
+
 .card {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 20px;
@@ -27,7 +60,7 @@
 }
 
 .field label {
-  color: #94a3b8;
+  color: var(--muted);
   font-size: 14px;
   min-width: 150px;
 }
@@ -41,7 +74,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border);
 }
 
 .subject-row button {
@@ -60,14 +93,14 @@
 }
 
 .bar-track {
-  background: #334155;
+  background: var(--surface-2);
   height: 22px;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .bar-fill {
-  background: #4ade80;
+  background: var(--accent);
   height: 100%;
   border-radius: 4px;
 }
@@ -75,7 +108,7 @@
 .bar-label {
   font-size: 14px;
   margin-bottom: 6px;
-  color: #cbd5e1;
+  color: var(--text);
 }
 
 .bar-group {
@@ -84,13 +117,26 @@
 
 .session-row {
   padding: 8px 0;
-  border-bottom: 1px solid #334155;
+  border-bottom: 1px solid var(--border);
   font-size: 14px;
 }
 
 .muted {
-  color: #64748b;
+  color: var(--muted);
   font-size: 14px;
+}
+
+.day-group {
+  margin-bottom: 20px;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
 }
 
 .overlay {
@@ -103,8 +149,8 @@
 }
 
 .dialog {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
   padding: 24px;
   max-width: 380px;
@@ -112,16 +158,4 @@
 
 .dialog p {
   margin-bottom: 16px;
-}
-.day-group {
-  margin-bottom: 20px;
-}
-
-.day-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-bottom: 6px;
-  margin-bottom: 4px;
-  border-bottom: 1px solid #475569;
 }

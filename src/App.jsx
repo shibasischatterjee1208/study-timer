@@ -26,6 +26,10 @@ function App() {
     const saved = localStorage.getItem("sessions")
     return saved ? JSON.parse(saved) : []
   })
+  
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "dark"
+  })
 
   const totalSeconds = sessions.reduce((sum, s) => sum + s.seconds, 0)
 
@@ -90,6 +94,11 @@ function App() {
     setSecondsLeft(durationMin * 60)
   }, [selected, subjects, durationMin])
 
+  // Saves theme preference
+  useEffect(() => {
+    localStorage.setItem("theme", theme)
+  }, [theme])
+
   // Saves subjects to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("subjects", JSON.stringify(subjects))
@@ -142,63 +151,75 @@ function App() {
   function cancelRemoval() {
     setPendingRemoval(null)
   }
+  
+  function toggleTheme() {
+    setTheme(t => (t === "dark" ? "light" : "dark"))
+  }
 
   function handleClearHistory() {
     setSessions([])
   }
 
-  return (
-    <div className="app">
-      <h1>Study Timer</h1>
+    return (
+    <div className={`app ${theme}`}>
+      <div className="inner">
+        <h1>Study Timer</h1>
 
-      <div className="card">
-        <TimerDisplay secondsLeft={secondsLeft} />
+        <div className="theme-row">
+          <button onClick={toggleTheme}>
+            {theme === "dark" ? "Light mode" : "Dark mode"}
+          </button>
+        </div>
 
-        <TimerControls
-          durationMin={durationMin}
-          status={status}
-          selected={selected}
-          subjects={subjects}
-          onDurationChange={handleDurationChange}
-          onSelectChange={e => setSelected(e.target.value)}
-          onStart={() => setStatus("running")}
-          onPause={() => setStatus("paused")}
-          onStop={handleStop}
-          onReset={handleReset}
+        <div className="card">
+          <TimerDisplay secondsLeft={secondsLeft} />
+
+          <TimerControls
+            durationMin={durationMin}
+            status={status}
+            selected={selected}
+            subjects={subjects}
+            onDurationChange={handleDurationChange}
+            onSelectChange={e => setSelected(e.target.value)}
+            onStart={() => setStatus("running")}
+            onPause={() => setStatus("paused")}
+            onStop={handleStop}
+            onReset={handleReset}
+          />
+        </div>
+
+        <div className="card">
+          <SubjectManager
+            subjects={subjects}
+            newSubject={newSubject}
+            onNewSubjectChange={e => setNewSubject(e.target.value)}
+            onAddSubject={handleAddSubject}
+            onRemoveSubject={handleRemoveSubject}
+          />
+        </div>
+
+        <div className="card">
+          <SubjectChart
+            totalsBySubject={totalsBySubject}
+            maxSeconds={maxSeconds}
+            hasSessions={sessions.length > 0}
+          />
+        </div>
+
+        <div className="card">
+          <DailyRecord
+            days={days}
+            totalSeconds={totalSeconds}
+            onClear={handleClearHistory}
+          />
+        </div>
+
+        <ConfirmDialog
+          subject={pendingRemoval}
+          onConfirm={confirmRemoval}
+          onCancel={cancelRemoval}
         />
       </div>
-
-      <div className="card">
-        <SubjectManager
-          subjects={subjects}
-          newSubject={newSubject}
-          onNewSubjectChange={e => setNewSubject(e.target.value)}
-          onAddSubject={handleAddSubject}
-          onRemoveSubject={handleRemoveSubject}
-        />
-      </div>
-
-      <div className="card">
-        <SubjectChart
-          totalsBySubject={totalsBySubject}
-          maxSeconds={maxSeconds}
-          hasSessions={sessions.length > 0}
-        />
-      </div>
-
-      <div className="card">
-        <DailyRecord
-          days={days}
-          totalSeconds={totalSeconds}
-          onClear={handleClearHistory}
-        />
-      </div>
-
-      <ConfirmDialog
-        subject={pendingRemoval}
-        onConfirm={confirmRemoval}
-        onCancel={cancelRemoval}
-      />
     </div>
   )
 }
