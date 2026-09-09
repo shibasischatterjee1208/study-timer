@@ -159,3 +159,14 @@
 .dialog p {
   margin-bottom: 16px;
 }
+
+.streak {
+  text-align: center;
+}
+
+.streak-number {
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+}

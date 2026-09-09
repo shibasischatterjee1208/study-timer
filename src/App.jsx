@@ -4,8 +4,13 @@ import TimerDisplay from "./components/TimerDisplay"
 import TimerControls from "./components/TimerControls"
 import SubjectManager from "./components/SubjectManager"
 import SubjectChart from "./components/SubjectChart"
+import StreakCounter from "./components/StreakCounter"
 import DailyRecord from "./components/DailyRecord"
 import ConfirmDialog from "./components/ConfirmDialog"
+
+function toKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+}
 
 function App() {
   const [durationMin, setDurationMin] = useState(25)
@@ -26,7 +31,7 @@ function App() {
     const saved = localStorage.getItem("sessions")
     return saved ? JSON.parse(saved) : []
   })
-  
+
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "dark"
   })
@@ -53,6 +58,20 @@ function App() {
       items: sessions.filter(s => s.date === date)
     }))
 
+  const studiedDates = new Set(sessions.map(s => s.date))
+
+  let streak = 0
+  const cursor = new Date()
+
+  if (!studiedDates.has(toKey(cursor))) {
+    cursor.setDate(cursor.getDate() - 1)
+  }
+
+  while (studiedDates.has(toKey(cursor))) {
+    streak = streak + 1
+    cursor.setDate(cursor.getDate() - 1)
+  }
+
   function logSession(elapsed) {
     if (elapsed <= 0) return
     const now = new Date()
@@ -62,7 +81,7 @@ function App() {
         id: Date.now(),
         subject: selected,
         seconds: elapsed,
-        date: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
+        date: toKey(now),
         completedAt: now.toLocaleTimeString()
       }
     ])
@@ -94,11 +113,6 @@ function App() {
     setSecondsLeft(durationMin * 60)
   }, [selected, subjects, durationMin])
 
-  // Saves theme preference
-  useEffect(() => {
-    localStorage.setItem("theme", theme)
-  }, [theme])
-
   // Saves subjects to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("subjects", JSON.stringify(subjects))
@@ -108,6 +122,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem("sessions", JSON.stringify(sessions))
   }, [sessions])
+
+  // Saves theme preference
+  useEffect(() => {
+    localStorage.setItem("theme", theme)
+  }, [theme])
 
   function handleStop() {
     logSession(durationMin * 60 - secondsLeft)
@@ -151,16 +170,16 @@ function App() {
   function cancelRemoval() {
     setPendingRemoval(null)
   }
-  
-  function toggleTheme() {
-    setTheme(t => (t === "dark" ? "light" : "dark"))
-  }
 
   function handleClearHistory() {
     setSessions([])
   }
 
-    return (
+  function toggleTheme() {
+    setTheme(t => (t === "dark" ? "light" : "dark"))
+  }
+
+  return (
     <div className={`app ${theme}`}>
       <div className="inner">
         <h1>Study Timer</h1>
@@ -204,6 +223,10 @@ function App() {
             maxSeconds={maxSeconds}
             hasSessions={sessions.length > 0}
           />
+        </div>
+
+        <div className="card">
+          <StreakCounter streak={streak} />
         </div>
 
         <div className="card">
