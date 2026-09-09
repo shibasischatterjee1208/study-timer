@@ -9,7 +9,7 @@ function SubjectManager({
     <div>
       <h2>Subjects</h2>
 
-      <div>
+      <div className="add-row">
         <input
           value={newSubject}
           onChange={onNewSubjectChange}
@@ -20,8 +20,8 @@ function SubjectManager({
 
       <ul>
         {subjects.map(s => (
-          <li key={s}>
-            {s}
+          <li key={s} className="subject-row">
+            <span>{s}</span>
             <button onClick={() => onRemoveSubject(s)}>×</button>
           </li>
         ))}

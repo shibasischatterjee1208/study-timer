@@ -3,7 +3,9 @@ function TimerDisplay({ secondsLeft }) {
   const seconds = secondsLeft % 60
 
   return (
-    <p>{minutes}:{String(seconds).padStart(2, "0")}</p>
+    <div className="clock">
+      {minutes}:{String(seconds).padStart(2, "0")}
+    </div>
   )
 }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import "./App.css"
 import TimerDisplay from "./components/TimerDisplay"
 import TimerControls from "./components/TimerControls"
 import SubjectManager from "./components/SubjectManager"
@@ -111,40 +112,48 @@ function App() {
     setPendingRemoval(null)
   }
 
-  return (
-    <div>
+    return (
+    <div className="app">
       <h1>Study Timer</h1>
 
-      <TimerDisplay secondsLeft={secondsLeft} />
+      <div className="card">
+        <TimerDisplay secondsLeft={secondsLeft} />
 
-      <TimerControls
-        durationMin={durationMin}
-        status={status}
-        selected={selected}
-        subjects={subjects}
-        onDurationChange={handleDurationChange}
-        onSelectChange={e => setSelected(e.target.value)}
-        onStart={() => setStatus("running")}
-        onPause={() => setStatus("paused")}
-        onStop={handleStop}
-        onReset={handleReset}
-      />
+        <TimerControls
+          durationMin={durationMin}
+          status={status}
+          selected={selected}
+          subjects={subjects}
+          onDurationChange={handleDurationChange}
+          onSelectChange={e => setSelected(e.target.value)}
+          onStart={() => setStatus("running")}
+          onPause={() => setStatus("paused")}
+          onStop={handleStop}
+          onReset={handleReset}
+        />
+      </div>
 
-      <SubjectManager
-        subjects={subjects}
-        newSubject={newSubject}
-        onNewSubjectChange={e => setNewSubject(e.target.value)}
-        onAddSubject={handleAddSubject}
-        onRemoveSubject={handleRemoveSubject}
-      />
+      <div className="card">
+        <SubjectManager
+          subjects={subjects}
+          newSubject={newSubject}
+          onNewSubjectChange={e => setNewSubject(e.target.value)}
+          onAddSubject={handleAddSubject}
+          onRemoveSubject={handleRemoveSubject}
+        />
+      </div>
 
-      <SubjectChart
-        totalsBySubject={totalsBySubject}
-        maxSeconds={maxSeconds}
-        hasSessions={sessions.length > 0}
-      />
+      <div className="card">
+        <SubjectChart
+          totalsBySubject={totalsBySubject}
+          maxSeconds={maxSeconds}
+          hasSessions={sessions.length > 0}
+        />
+      </div>
 
-      <SessionHistory sessions={sessions} totalSeconds={totalSeconds} />
+      <div className="card">
+        <SessionHistory sessions={sessions} totalSeconds={totalSeconds} />
+      </div>
 
       <ConfirmDialog
         subject={pendingRemoval}

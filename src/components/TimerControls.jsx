@@ -12,8 +12,8 @@ function TimerControls({
 }) {
   return (
     <div>
-      <div>
-        <label>Session length (minutes): </label>
+      <div className="field">
+        <label>Session length (min)</label>
         <input
           type="number"
           min="1"
@@ -23,8 +23,8 @@ function TimerControls({
         />
       </div>
 
-      <div>
-        <label>Subject: </label>
+      <div className="field">
+        <label>Subject</label>
         <select value={selected} onChange={onSelectChange}>
           <option value="">-- pick one --</option>
           {subjects.map(s => (
@@ -33,7 +33,7 @@ function TimerControls({
         </select>
       </div>
 
-      <div>
+      <div className="controls">
         <button onClick={onStart} disabled={selected === "" || status === "running"}>
           Start
         </button>

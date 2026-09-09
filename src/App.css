@@ -1,0 +1,115 @@
+.app {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.clock {
+  font-size: 64px;
+  font-weight: 300;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 20px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.field label {
+  color: #94a3b8;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.controls {
+  margin-top: 16px;
+}
+
+.subject-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #334155;
+}
+
+.subject-row button {
+  padding: 4px 10px;
+  margin: 0;
+}
+
+.add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.add-row input {
+  flex: 1;
+}
+
+.bar-track {
+  background: #334155;
+  height: 22px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: #4ade80;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.bar-label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #cbd5e1;
+}
+
+.bar-group {
+  margin-bottom: 14px;
+}
+
+.session-row {
+  padding: 8px 0;
+  border-bottom: 1px solid #334155;
+  font-size: 14px;
+}
+
+.muted {
+  color: #64748b;
+  font-size: 14px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 24px;
+  max-width: 380px;
+}
+
+.dialog p {
+  margin-bottom: 16px;
+}
