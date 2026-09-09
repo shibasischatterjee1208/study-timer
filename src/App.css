@@ -32,8 +32,24 @@
 }
 
 .theme-row {
-  text-align: right;
-  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.theme-row button {
+  margin-right: 0;
+}
+
+.header h1 {
+  margin: 0;
+  text-align: left;
+  font-size: 24px;
+}
+
+.header button {
+  margin-right: 0;
+  flex-shrink: 0;
 }
 
 .card {

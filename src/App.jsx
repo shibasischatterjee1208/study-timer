@@ -25,7 +25,7 @@ function App() {
   const [newSubject, setNewSubject] = useState("")
   const [selected, setSelected] = useState("")
 
-  const [pendingRemoval, setPendingRemoval] = useState(null)
+  const [pending, setPending] = useState(null)
 
   const [sessions, setSessions] = useState(() => {
     const saved = localStorage.getItem("sessions")
@@ -128,12 +128,6 @@ function App() {
     localStorage.setItem("theme", theme)
   }, [theme])
 
-  useEffect(() => {
-    const m = Math.floor(secondsLeft / 60)
-    const s = String(secondsLeft % 60).padStart(2, "0")
-    document.title = status === "running" ? `${m}:${s} — Study Timer` : "Study Timer"
-  }, [secondsLeft, status])
-
   function handleStop() {
     logSession(durationMin * 60 - secondsLeft)
     setStatus("idle")
@@ -162,23 +156,35 @@ function App() {
   }
 
   function handleRemoveSubject(name) {
-    setPendingRemoval(name)
-  }
-
-  function confirmRemoval() {
-    setSubjects(subjects.filter(s => s !== pendingRemoval))
-    if (selected === pendingRemoval) {
-      setSelected("")
-    }
-    setPendingRemoval(null)
-  }
-
-  function cancelRemoval() {
-    setPendingRemoval(null)
+    setPending({
+      message: `Are you sure you want to remove "${name}"?`,
+      action: "removeSubject",
+      subject: name
+    })
   }
 
   function handleClearHistory() {
-    setSessions([])
+    setPending({
+      message: "Clear all session history? This cannot be undone.",
+      action: "clearHistory"
+    })
+  }
+
+  function confirmPending() {
+    if (pending.action === "removeSubject") {
+      setSubjects(subjects.filter(s => s !== pending.subject))
+      if (selected === pending.subject) {
+        setSelected("")
+      }
+    }
+    if (pending.action === "clearHistory") {
+      setSessions([])
+    }
+    setPending(null)
+  }
+
+  function cancelPending() {
+    setPending(null)
   }
 
   function toggleTheme() {
@@ -188,13 +194,13 @@ function App() {
   return (
     <div className={`app ${theme}`}>
       <div className="inner">
-        <h1>Study Timer</h1>
-
         <div className="theme-row">
           <button onClick={toggleTheme}>
             {theme === "dark" ? "Light mode" : "Dark mode"}
           </button>
         </div>
+
+        <h1>Study Timer</h1>
 
         <div className="card">
           <TimerDisplay secondsLeft={secondsLeft} />
@@ -244,9 +250,9 @@ function App() {
         </div>
 
         <ConfirmDialog
-          subject={pendingRemoval}
-          onConfirm={confirmRemoval}
-          onCancel={cancelRemoval}
+          message={pending ? pending.message : null}
+          onConfirm={confirmPending}
+          onCancel={cancelPending}
         />
       </div>
     </div>
