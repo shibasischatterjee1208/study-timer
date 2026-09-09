@@ -58,7 +58,7 @@ function App() {
         id: Date.now(),
         subject: selected,
         seconds: elapsed,
-        date: now.toISOString().slice(0, 10),
+        date: `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`,
         completedAt: now.toLocaleTimeString()
       }
     ])
