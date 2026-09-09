@@ -65,6 +65,12 @@
   min-width: 150px;
 }
 
+.field input,
+.field select {
+  flex: 1;
+  min-width: 0;
+}
+
 .controls {
   margin-top: 16px;
 }
@@ -169,4 +175,32 @@
   font-weight: 300;
   color: var(--accent);
   line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .field {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .field label {
+    min-width: 0;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .controls button {
+    flex: 1;
+    margin-right: 0;
+    min-width: 70px;
+  }
+
+  .clock {
+    font-size: 48px;
+  }
 }
