@@ -4,7 +4,7 @@ import TimerDisplay from "./components/TimerDisplay"
 import TimerControls from "./components/TimerControls"
 import SubjectManager from "./components/SubjectManager"
 import SubjectChart from "./components/SubjectChart"
-import SessionHistory from "./components/SessionHistory"
+import DailyRecord from "./components/DailyRecord"
 import ConfirmDialog from "./components/ConfirmDialog"
 
 function App() {
@@ -12,12 +12,20 @@ function App() {
   const [secondsLeft, setSecondsLeft] = useState(25 * 60)
   const [status, setStatus] = useState("idle")
 
-  const [subjects, setSubjects] = useState(["Calculus", "Physics", "DSA"])
+  const [subjects, setSubjects] = useState(() => {
+    const saved = localStorage.getItem("subjects")
+    return saved ? JSON.parse(saved) : ["Calculus", "Physics", "DSA"]
+  })
+
   const [newSubject, setNewSubject] = useState("")
-  const [selected, setSelected] = useState("Calculus")
+  const [selected, setSelected] = useState("")
 
   const [pendingRemoval, setPendingRemoval] = useState(null)
-  const [sessions, setSessions] = useState([])
+
+  const [sessions, setSessions] = useState(() => {
+    const saved = localStorage.getItem("sessions")
+    return saved ? JSON.parse(saved) : []
+  })
 
   const totalSeconds = sessions.reduce((sum, s) => sum + s.seconds, 0)
 
@@ -30,15 +38,28 @@ function App() {
 
   const maxSeconds = Math.max(...totalsBySubject.map(t => t.seconds), 1)
 
+  const days = [...new Set(sessions.map(s => s.date))]
+    .sort()
+    .reverse()
+    .map(date => ({
+      date,
+      seconds: sessions
+        .filter(s => s.date === date)
+        .reduce((sum, s) => sum + s.seconds, 0),
+      items: sessions.filter(s => s.date === date)
+    }))
+
   function logSession(elapsed) {
     if (elapsed <= 0) return
+    const now = new Date()
     setSessions(prev => [
       ...prev,
       {
         id: Date.now(),
         subject: selected,
         seconds: elapsed,
-        completedAt: new Date().toLocaleTimeString()
+        date: now.toISOString().slice(0, 10),
+        completedAt: now.toLocaleTimeString()
       }
     ])
   }
@@ -68,6 +89,16 @@ function App() {
     setStatus("idle")
     setSecondsLeft(durationMin * 60)
   }, [selected, subjects, durationMin])
+
+  // Saves subjects to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("subjects", JSON.stringify(subjects))
+  }, [subjects])
+
+  // Saves sessions to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("sessions", JSON.stringify(sessions))
+  }, [sessions])
 
   function handleStop() {
     logSession(durationMin * 60 - secondsLeft)
@@ -112,7 +143,11 @@ function App() {
     setPendingRemoval(null)
   }
 
-    return (
+  function handleClearHistory() {
+    setSessions([])
+  }
+
+  return (
     <div className="app">
       <h1>Study Timer</h1>
 
@@ -152,7 +187,11 @@ function App() {
       </div>
 
       <div className="card">
-        <SessionHistory sessions={sessions} totalSeconds={totalSeconds} />
+        <DailyRecord
+          days={days}
+          totalSeconds={totalSeconds}
+          onClear={handleClearHistory}
+        />
       </div>
 
       <ConfirmDialog
