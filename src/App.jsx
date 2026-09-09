@@ -128,6 +128,12 @@ function App() {
     localStorage.setItem("theme", theme)
   }, [theme])
 
+  useEffect(() => {
+    const m = Math.floor(secondsLeft / 60)
+    const s = String(secondsLeft % 60).padStart(2, "0")
+    document.title = status === "running" ? `${m}:${s} — Study Timer` : "Study Timer"
+  }, [secondsLeft, status])
+
   function handleStop() {
     logSession(durationMin * 60 - secondsLeft)
     setStatus("idle")
